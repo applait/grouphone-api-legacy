@@ -8,6 +8,9 @@ var router = require("express").Router();
 
 router.post("/:email", function (req, res) {
 
+    if (req.hostname !== gp.config.HOSTNAME) {
+        return res.status(403).json({ "message": "Not you. Yes, YOU. NOT you." });
+    }
     // Look for the `name` query parameter
     var email = req.params && req.params.email && req.params.email.trim();
 
