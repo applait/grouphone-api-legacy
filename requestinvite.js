@@ -29,16 +29,19 @@ router.post("/:email", function (req, res) {
                 gp.db.invites.put(email, data, function (err) {
                     if (err) {
                         console.log("[ERR] Inserting request invite email", email, req.ip);
-                        return res.status(500).json({ "message": "Something went wrong", "status": 500 });
+                        return res.status(500).json({ "message": "Oops! Something went wrong", "status": 500 });
                     }
-                    res.status(200).json({ "message": "Ok", "status": 200});
+                    res.status(200).json({ "message": "Got it. You are in queue!", "status": 200});
                 });
             } else {
                 console.log("[ERR] Checking request invite email", email, req.ip);
-                return res.status(500).json({ "message": "Something went wrong", "status": 500 });
+                return res.status(500).json({ "message": "Oops! Something went wrong", "status": 500 });
             }
         } else {
-            return res.status(200).json({ "message": "E-mail address already registered", "status": 406 });
+            return res.status(200).json({
+                "message": "This email is already registered. But, we're overjoyed to see your interest!",
+                "status": 406
+            });
         }
     });
 });
