@@ -12,11 +12,11 @@ router.post("/:email", function (req, res) {
     var email = req.params && req.params.email && req.params.email.trim();
 
     if (!email) {
-        return res.status(406).json({ "message": "Need `email` as a query parameter." });
+        return res.status(406).json({ "message": "Need `email` as a query parameter.", "status": 406 });
     }
 
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) !== true) {
-        return res.status(406).json({ "message": "Need a valid email address." });
+        return res.status(406).json({ "message": "Need a valid email address.", "status": 406 });
     }
 
     // Check if email already exists
@@ -44,7 +44,7 @@ router.post("/:email", function (req, res) {
         } else {
             return res.status(200).json({
                 "message": "This email is already registered. But, we're overjoyed to see your interest!",
-                "status": 406
+                "status": 200
             });
         }
     });
