@@ -15,6 +15,10 @@ router.post("/:email", function (req, res) {
         return res.status(406).json({ "message": "Need `email` as a query parameter." });
     }
 
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) !== true) {
+        return res.status(406).json({ "message": "Need a valid email address." });
+    }
+
     // Check if email already exists
     gp.db.invites.get(email, function (err) {
         if (err) {
