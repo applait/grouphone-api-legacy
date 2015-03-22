@@ -8,6 +8,10 @@ var router = require("express").Router();
 
 router.post("/:email", function (req, res) {
 
+    if (!gp.config.ACCEPT_INVITATION) {
+        return res.status(403).json({ "message": "Invitations are closed now." });
+    }
+
     if (req.hostname !== gp.config.HOSTNAME) {
         return res.status(403).json({ "message": "Not you. Yes, YOU. NOT you." });
     }
