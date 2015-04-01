@@ -8,11 +8,11 @@ var router = require("express").Router();
 
 router.post("/:email", function (req, res) {
 
-    if (!gp.config.ACCEPT_INVITATION) {
+    if (!config.ACCEPT_INVITATION) {
         return res.status(403).json({ "message": "Invitations are closed now." });
     }
 
-    if (req.hostname !== gp.config.HOSTNAME) {
+    if (req.hostname !== config.HOSTNAME) {
         return res.status(403).json({ "message": "Not you. Yes, YOU. NOT you." });
     }
     // Look for the `name` query parameter
@@ -27,7 +27,7 @@ router.post("/:email", function (req, res) {
     }
 
     // Check if email already exists
-    gp.db.invites.get(email, function (err) {
+    db.invites.get(email, function (err) {
         if (err) {
             if (err.notFound) {
                 // Prepare data object
@@ -37,7 +37,7 @@ router.post("/:email", function (req, res) {
                 };
 
                 // Put id in session db
-                gp.db.invites.put(email, data, function (err) {
+                db.invites.put(email, data, function (err) {
                     if (err) {
                         console.log("[ERR] Inserting request invite email", email, req.ip);
                         return res.status(500).json({ "message": "Oops! Something went wrong", "status": 500 });
