@@ -18,7 +18,7 @@ router.post("/login", function (req, res) {
 });
 
 // Handle user activation on invite URL access
-router.get("/activate", function (req, res) { res.redirect(302, "login") }
+router.get("/activate", function (req, res) { res.redirect(302, "login") });
 
 router.get("/activate/:code", function (req, res) {
     db.activations.findOne({ code: req.params.code }, function (err, doc) {
