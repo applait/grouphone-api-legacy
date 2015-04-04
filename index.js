@@ -9,6 +9,7 @@ router.get("/", function (req, res) {
 });
 
 router.use("/login", require("./login"));
+router.use("/verify", require("./verify"));
 router.use("/forgot", require("./forgot"));
 router.use("/passwd", require("./passwd"));
 router.use("/activate", require("./activate"));

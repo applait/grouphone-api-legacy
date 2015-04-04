@@ -24,10 +24,17 @@ var libs = {
         if (err) return callback(err);
         db.activations.remove( { email: email }, function (error) {
           // @TODO: maybe rollback isActive?
-          if (error)  return callback(error);
+          if (error) return callback(error);
         });
       }
     );
+  },
+
+  verifySession: function (params) {
+    db.sessions.findOne({ email: params.email }, function (err, doc) {
+      if (doc && doc.sessions && doc.sessions[params.sessionId]) return true;
+      else return false;
+    });
   }
 }
 
