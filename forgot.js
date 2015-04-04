@@ -4,21 +4,33 @@
 
 var router = require("express").Router();
 
+// API to handle forgot password requests from clients
+// Expects username in request body
 router.post("/", function (req, res) {
-  /*
-    1. API server receives a request from Client
-    2. API expects username in request body
-    3. API looks up on database for the user
-      i. If the user is found for the email
-        a. Check "isActive" on accounts
-          - If true, break;
-          - If false
-            # Set "isActive" false
-            # Generate password reset token
-        b. Email user with password reset URL
-        c. Respond to client, email sent
-  */
-  res.status(200).json({});
+
+  // API looks up on database for the user
+  libs.findUser(req.body.email, function (user) {
+
+    // If the user is found for the email
+    if (user) {
+
+      // Run the deactivation routines
+      libs.deactivateUser(user.email, function (result) {
+        return res.status(200).json({ success: true });
+      }, function (error) {
+        return res.status(500).json({
+          error: error,
+          message: "DB operation failed"
+        });
+      });
+    }
+
+    // If the user doesn't exist, send fail message
+    else res.status(200).json({
+      error: {},
+      message: "Couldn't find the user."
+    });
+  });
 });
 
 module.exports = router;
