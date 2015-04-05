@@ -49,10 +49,10 @@ var libs = {
     );
   },
 
-  validateToken: function (token, done, fail) {
+  validateToken: function (token, callback) {
     db.activations.findOne({ token: token }, function (err, doc) {
-      if (doc && doc.email) done(doc);
-      else fail(err);
+      if (err) return callback(err);
+      callback(null, doc);
     });
   },
 
