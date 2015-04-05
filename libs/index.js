@@ -34,16 +34,16 @@ var libs = {
     });
   },
 
-  updatePassword: function (params, done, fail) {
+  updatePassword: function (params, callback) {
     db.accounts.update(
       { email: params.email },
       { $set: { password: params.password } },
       function (err) {
-        if (err) fail(err);
+        if (err) return callback(err);
 
-        else db.activations.remove({ email: email }, function (error) {
-          if (error) fail(error);
-          else done();
+        db.activations.remove({ email: email }, function (error) {
+          if (error) return callback(error);
+          callback(null);
         });
       }
     );
