@@ -41,7 +41,7 @@ var libs = {
       function (err) {
         if (err) return callback(err);
 
-        db.activations.remove({ email: email }, function (error) {
+        db.activations.remove({ email: params.email }, function (error) {
           if (error) return callback(error);
           callback(null);
         });
