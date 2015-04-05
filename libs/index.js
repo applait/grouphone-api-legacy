@@ -43,6 +43,28 @@ var libs = {
     );
   },
 
+  updatePassword: function (params, done, fail) {
+    db.accounts.update(
+      { email: params.email },
+      { $set: { password: params.password } },
+      function (err) {
+        if (err) fail(err);
+
+        else db.activations.remove({ email: email }, function (error) {
+          if (error) fail(error);
+          else done();
+        });
+      }
+    );
+  },
+
+  validateToken: function (token, done, fail) {
+    db.activations.findOne({ token: token }, function (err, doc) {
+      if (doc && doc.email) done(doc);
+      else fail(err);
+    });
+  },
+
   verifySession: function (params, callback) {
     db.sessions.findOne({ email: params.email }, function (err, doc) {
       if (doc && doc.sessions && doc.sessions[params.sessionId]) callback(doc);

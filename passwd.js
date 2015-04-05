@@ -4,33 +4,53 @@
 
 var router = require("express").Router();
 
+// API to handle password change requests
+// Expects activation token as URL parameters
 router.get("/:token", function (req, res) {
-  /*
-    1. API server receives a request from Client
-    2. API expects reset token in request params
-    3. API looks up on database for the token
-      i. If the user is found for the token
-        a. Send success response
-        b. Include email and token
-      ii. If the user isn't found, send error
-  */
-  res.status(200).json({});
+
+  // API looks up on activations for existing request
+  libs.validateToken(req.params.token, function (result) {
+
+    // Send back email along with the token
+    return res.status(200).json({result});
+  }, function (error) {
+
+    // Send back error if the record wasn't found
+    return res.status(500).json({
+      error: error,
+      message: "No pending password reset request for the user."
+    });
+  });
 });
 
+// API to handle update password requests
+// Expects email, password & token in request body
 router.post("/", function (req, res) {
-  /*
-    1. API server receives a request from Client
-    2. API expects email, password & token in request body
-    3. API looks up on activations for the user with email
-      i. If the user is found & token matches
-        a. Look up on accounts for user with Email
-        b. Update password-hash
-        c. Send success
-      ii. If the user is found, but token doesn't match
-        a. Send error, no pending password reset request
-      iii. If the user isn't found, send error
-  */
-  res.status(200).json({});
+
+  // API looks up on activations for existing request
+  libs.validateToken(req.body.token, function (result) {
+
+    // Update password on accounts collection
+    libs.updatePassword(req.body, function () {
+
+      // Send success silently
+      return res.status(200).json({ success: true });
+    }, function (error) {
+
+      // Return error is update password fails
+      return res.status(500).json({
+        error: error,
+        message: "DB operation failed"
+      });
+    });
+  }, function (error) {
+
+    // Send back error if the record wasn't found
+    return res.status(500).json({
+      error: error,
+      message: "No pending password reset request for the user."
+    });
+  });
 });
 
 module.exports = router;
