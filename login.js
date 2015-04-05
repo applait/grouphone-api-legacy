@@ -9,7 +9,14 @@ var router = require("express").Router();
 router.post("/", function (req, res) {
 
   // API looks up on database for the user
-  var user = libs.findUser(req.body.email, function (user) {
+  libs.findUser(req.body.email, function (err, user) {
+
+    if (err) {
+      return res.status(500).json({
+        error: err,
+        message: "DB operation failed"
+      });
+    }
 
     // If the user is found for the email
     if (user) {
