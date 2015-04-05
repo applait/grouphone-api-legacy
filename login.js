@@ -39,8 +39,19 @@ router.post("/", function (req, res) {
         // Strip off password data from user-info
         delete user.password;
 
-        // Send success with user-datails
-        return res.status(200).json(user);
+        // Generate user token and set session info
+        libs.addSession(user.email, function (error, token) {
+          if (error) {
+            return res.status(500).json({
+              error: error,
+              message: "DB operation failed"
+            });
+          }
+          user.token = token;
+          // Send success with user-datails
+          return res.status(200).json(user);
+        });
+
       } else {
 
         // So, the password didn't match
