@@ -20,22 +20,18 @@ var libs = {
     });
   },
 
-  deactivateUser: function (email, done, fail) {
-    db.accounts.update(
-      { email: email },
-      { $set: { isActive: false } },
-      function (err) {
-        if (err) fail(err);
-
-        else db.activations.insert({
-          email: email,
-          token: libs.generateToken(email)
-        }, function (error, doc) {
-          if (error) fail(error);
-          else done(doc);
+  deactivateUser: function (email, callback) {
+    var token = libs.generateToken(email);
+    db.activations.remove({ email: email }, function (error) {
+      if (error) return callback(error);
+      db.activations.insert({ email: email, token: token }, function (error) {
+        if (error) return callback(error);
+        db.accounts.update({ email: email }, { $set: { isActive: false }}, function (error) {
+          if (error) return callback(error);
+          callback(null, token);
         });
-      }
-    );
+      });
+    });
   },
 
   updatePassword: function (params, done, fail) {
