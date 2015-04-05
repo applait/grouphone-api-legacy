@@ -5,8 +5,8 @@
 var libs = {
   findUser: function (email, callback) {
     db.accounts.findOne({ email: email }, function (err, doc) {
-      if (err) return err;
-      else callback(doc);
+      if (err) return callback(err);
+      else callback(null, doc);
     });
   },
 
