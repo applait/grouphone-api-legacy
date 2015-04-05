@@ -92,8 +92,8 @@ var libs = {
     var message = {
       "html": params.body,
       "subject": params.subject,
-      "from_email": "noreply@grouphone.me",
-      "from_name": "Grouphone",
+      "from_email": config.SITE_EMAIL ? config.SITE_EMAIL : "noreply@grouphone.me",
+      "from_name": config.SITE_NAME ? config.SITE_NAME : "Grouphone",
       "to": params.to
     };
 
