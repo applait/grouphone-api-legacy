@@ -90,7 +90,7 @@ var libs = {
     var mandrill = (new require("mandrill-api/mandrill")).Mandrill(config.MANDRILL_API_KEY);
 
     var message = {
-      "html": params.body,
+      "html": params.body, // @TODO: Parse this through an ejs template made for email
       "subject": params.subject,
       "from_email": config.SITE_EMAIL ? config.SITE_EMAIL : "noreply@grouphone.me",
       "from_name": config.SITE_NAME ? config.SITE_NAME : "Grouphone",
