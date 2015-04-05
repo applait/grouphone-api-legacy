@@ -11,18 +11,13 @@ var libs = {
   },
 
   activateUser: function (email, callback) {
-    db.accounts.update(
-      { email: email },
-      { $set: { isActive: true } },
-      function (err) {
-        if (err) callback(err);
-
-        else db.activations.remove({ email: email }, function (error) {
-          // @TODO: maybe rollback isActive?
-          if (error) callback(error);
-        });
-      }
-    );
+    db.activations.remove({ email: email }, function (error) {
+      if (error) return callback(error);
+      db.accounts.update({ email: email }, { $set: { isActive: true }}, function (error) {
+        if (error) return callback(error);
+        callback(null);
+      });
+    });
   },
 
   deactivateUser: function (email, done, fail) {
