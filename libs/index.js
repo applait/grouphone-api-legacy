@@ -43,10 +43,10 @@ var libs = {
     );
   },
 
-  verifySession: function (params) {
+  verifySession: function (params, callback) {
     db.sessions.findOne({ email: params.email }, function (err, doc) {
-      if (doc && doc.sessions && doc.sessions[params.sessionId]) return true;
-      else return false;
+      if (doc && doc.sessions && doc.sessions[params.sessionId]) callback(doc);
+      else callback(false);
     });
   },
 
