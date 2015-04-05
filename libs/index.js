@@ -115,8 +115,10 @@ var libs = {
    * @param {String} params.subject - The subject of the email.
    * @param {Array} params.to - An array of objects per receiver. Each object needs to contain: { email: "", name: ""}.
    * `name` is optional.
+   * @param {Function} callback - The callback gets two args. The first arg is set only when there is an error. The
+   * second arg contains the result object.
    */
-  sendEmail: function (params) {
+  sendEmail: function (params, callback) {
     var mandrill = (new require("mandrill-api/mandrill")).Mandrill(config.MANDRILL_API_KEY);
 
     var message = {
@@ -128,9 +130,10 @@ var libs = {
     };
 
     mandrill.messages.send({ message: message, async: true }, function (result) {
-      console.log("Email sent", result);
+      callback(null, result);
     }, function (e) {
       console.log("Error sending email: " + e.name + ": " + e.message);
+      callback("Error sending email: " + e.name + ": " + e.message);
     });
   }
 
