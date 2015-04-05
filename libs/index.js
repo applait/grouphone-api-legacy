@@ -58,8 +58,9 @@ var libs = {
 
   verifySession: function (params, callback) {
     db.sessions.findOne({ email: params.email }, function (err, doc) {
-      if (doc && doc.sessions && doc.sessions[params.sessionId]) callback(doc);
-      else callback(false);
+      if (err) return callback(err);
+      if (doc && doc.sessions && doc.sessions[params.sessionId]) callback(null, doc);
+      else callback(null, false);
     });
   },
 
