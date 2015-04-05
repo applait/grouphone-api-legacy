@@ -24,14 +24,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Register routes
-app.use("/", function (req, res) {
+app.use("/api", require("./api"));
+app.get("/", function (req, res) {
   res.redirect("http://grouphone.me");
 });
-app.use("/api", require("./api"));
 
 // Start the server
 var server = app.listen(config.APP_PORT, config.APP_IP, function () {
     console.log("Starting Grouphone API server...");
     console.log("Listening on port %s:%d", config.APP_IP, config.APP_PORT);
 });
-
