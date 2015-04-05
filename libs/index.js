@@ -93,7 +93,7 @@ var libs = {
     db.sessions.findOne({ email: email }, function (err, doc) {
       if (err) return callback(err);
       if (!doc) {
-        return callback({ message: "Session not found."});
+        return callback(null, { message: "Session not found."});
       }
       if (doc.sessions[sessionid]) delete doc.sessions[sessionid];
       db.sessions.update({ email: email }, { $set: { sessions: doc.sessions }}, function (err) {
