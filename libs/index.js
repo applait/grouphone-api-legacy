@@ -77,10 +77,33 @@ var libs = {
     return require("crypto").createHash("sha1").update(token).digest("hex");
   },
 
+  /**
+   * Method to send email
+   *
+   * @param {Object} params - An object containing the email parameters
+   * @param {String} params.body - The body content to be sent in the email. This will be rendered into a template.
+   * @param {String} params.subject - The subject of the email.
+   * @param {Array} params.to - An array of objects per receiver. Each object needs to contain: { email: "", name: ""}.
+   * `name` is optional.
+   */
   sendEmail: function (params) {
-    // Handle emailing with http://www.nodemailer.com/
-    console.log("Email Sent!");
+    var mandrill = (new require("mandrill-api/mandrill")).Mandrill(config.MANDRILL_API_KEY);
+
+    var message = {
+      "html": params.body,
+      "subject": params.subject,
+      "from_email": "noreply@grouphone.me",
+      "from_name": "Grouphone",
+      "to": params.to
+    };
+
+    mandrill.messages.send({ message: message, async: true }, function (result) {
+      console.log("Email sent", result);
+    }, function (e) {
+      console.log("Error sending email: " + e.name + ": " + e.message);
+    });
   }
-}
+
+};
 
 module.exports = libs;
