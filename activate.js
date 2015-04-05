@@ -11,7 +11,7 @@ router.get("/:token", function (req, res) {
   // API looks up on activations for existing request
   libs.validateToken(req.params.token, function (err, result) {
 
-    if (err) {
+    if (err || !result) {
       // Send back error if the record wasn't found
       return res.status(500).json({
         error: error,
@@ -29,7 +29,7 @@ router.post("/", function (req, res) {
   // API looks up on activations for existing request
   libs.validateToken(req.body.token, function (err, doc) {
 
-    if (err) {
+    if (err || !doc) {
       // Send back error if the record wasn't found
       return res.status(500).json({
         error: err,
