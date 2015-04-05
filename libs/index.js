@@ -4,7 +4,7 @@
 
 var libs = {
   findUser: function (email, callback) {
-    db.accounts.findOne({ email: email }, function (err, doc) {
+    db.accounts.findOne({ email: email }, { _id: 0 }, function (err, doc) {
       if (err) return callback(err);
       else callback(null, doc);
     });
