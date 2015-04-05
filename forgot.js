@@ -15,14 +15,14 @@ router.post("/", function (req, res) {
     if (user) {
 
       // Run the deactivation routines
-      libs.deactivateUser(user.email, function (err, result) {
+      libs.deactivateUser(user.email, function (err, token) {
         if (err) {
           return res.status(500).json({
             error: error,
             message: "DB operation failed"
           });
         }
-        return res.status(200).json({ success: true });
+        return res.status(200).json({ email: user.email, token: token });
       });
     }
 
