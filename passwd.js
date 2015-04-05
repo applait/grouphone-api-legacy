@@ -12,7 +12,7 @@ router.get("/:token", function (req, res) {
   libs.validateToken(req.params.token, function (result) {
 
     // Send back email along with the token
-    return res.status(200).json({result});
+    return res.status(200).json(result);
   }, function (error) {
 
     // Send back error if the record wasn't found
