@@ -1,0 +1,15 @@
+var config = {
+    ACCEPT_INVITATION: false,
+    APP_IP : "0.0.0.0",
+    APP_PORT: "8081",
+    HOSTNAME: "grouphone.me",
+    MONGO_URL: "mongodb://localhost:27017/grouphone",
+    SALT: "w#e^w7&e*3@w74r32!",
+    MANDRILL_API_KEY: "",
+    SITE_NAME: "Grouphone",
+    SITE_EMAIL: "noreply@grouphone.me",
+    API_HOSTNAME: "api.grouphone.me",
+    API_PORT: "8080"
+};
+
+module.exports = config;
