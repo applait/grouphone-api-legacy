@@ -7,9 +7,7 @@ var config = {
     SALT: "w#e^w7&e*3@w74r32!",
     MANDRILL_API_KEY: "",
     SITE_NAME: "Grouphone",
-    SITE_EMAIL: "noreply@grouphone.me",
-    API_HOSTNAME: "api.grouphone.me",
-    API_PORT: "8080"
+    SITE_EMAIL: "noreply@grouphone.me"
 };
 
 module.exports = config;
