@@ -72,6 +72,45 @@ var libs = {
     });
   },
 
+  addSession: function (email, client, callback) {
+    if (client instanceof Function) {
+      callback = client;
+      client = "Grouphone Web";
+    }
+    var token = libs.generateToken(email);
+    db.sessions.findOne({ email: email }, function (err, doc) {
+      if (err) return callback(err);
+      if (doc) {
+        doc.sessions[token] = { id: token, client: client };
+        db.sessions.update({ email: email }, { $set: { sessions: doc.sessions }}, function (err) {
+          if (err) return callback(err);
+          callback(null, token);
+        });
+      } else {
+        doc = { email: email, sessions: {}};
+        doc.sessions[token] = { id: token, client: client };
+        db.sessions.insert(doc, function (err) {
+          if (err) return callback(err);
+          callback(null, token);
+        });
+      }
+    });
+  },
+
+  removeSession: function (email, sessionid, callback) {
+    db.sessions.findOne({ email: email }, function (err, doc) {
+      if (err) return callback(err);
+      if (!doc) {
+        return callback({ message: "Session not found."});
+      }
+      if (doc.sessions[sessionid]) delete doc.sessions[sessionid];
+      db.sessions.update({ email: email }, { $set: { sessions: doc.sessions }}, function (err) {
+        if (err) return callback(err);
+        callback(null, { message: "Removed session"});
+      });
+    });
+  },
+
   generateToken: function (email) {
     var token = email + Date.now() + config.SALT;
     return require("crypto").createHash("sha1").update(token).digest("hex");
