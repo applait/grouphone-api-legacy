@@ -22,7 +22,7 @@ router.post("/", function (req, res) {
     if (user) {
 
       // And password matched
-      if ( user.password == req.body.password) {
+      if ( user.password == libs.hashPassword(req.body.password)) {
 
         // Check if "isActive" is false
         if (!user.isActive) {
