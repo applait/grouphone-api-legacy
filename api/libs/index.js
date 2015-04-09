@@ -2,11 +2,13 @@
  * Shared methods for API calls to reuse
  */
 
+var crypto = require("crypto");
+
 var libs = {
   findUser: function (email, callback) {
     db.accounts.findOne({ email: email }, { _id: 0 }, function (err, doc) {
       if (err) return callback(err);
-      else callback(null, doc);
+      callback(null, doc);
     });
   },
 
@@ -35,10 +37,12 @@ var libs = {
   },
 
   updatePassword: function (params, callback) {
+
     db.accounts.update(
       { email: params.email },
-      { $set: { password: params.password } },
+      { $set: { password: libs.hashPassword(params.password) } },
       function (err) {
+        console.log(err);
         if (err) return callback(err);
 
         db.activations.remove({ email: params.email }, function (error) {
@@ -105,7 +109,7 @@ var libs = {
 
   generateToken: function (email) {
     var token = email + Date.now() + config.SALT;
-    return require("crypto").createHash("sha1").update(token).digest("hex");
+    return crypto.createHash("sha1").update(token).digest("hex");
   },
 
   /**
@@ -136,6 +140,10 @@ var libs = {
       console.log("Error sending email: " + e.name + ": " + e.message);
       callback("Error sending email: " + e.name + ": " + e.message);
     });
+  },
+
+  hashPassword: function (password) {
+    return crypto.createHash("sha1", config.SALT).update(password).digest("hex");
   }
 
 };
