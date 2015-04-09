@@ -14,7 +14,7 @@ router.get("/:token", function (req, res) {
     if (err || !result) {
       // Send back error if the record wasn't found
       return res.status(500).json({
-        error: error,
+        error: err,
         message: "No pending password reset request for the user."
       });
     }
@@ -34,7 +34,7 @@ router.post("/", function (req, res) {
     if (err || !result) {
       // Send back error if the record wasn't found
       return res.status(500).json({
-        error: error,
+        error: err,
         message: "No pending password reset request for the user."
       });
     }
@@ -45,7 +45,7 @@ router.post("/", function (req, res) {
       if (err) {
         // Return error is update password fails
         return res.status(500).json({
-          error: error,
+          error: err,
           message: "DB operation failed"
         });
       }
