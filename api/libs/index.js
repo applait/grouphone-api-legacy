@@ -37,12 +37,11 @@ var libs = {
   },
 
   updatePassword: function (params, callback) {
-
+    params.password = libs.hashPassword(params.password);
     db.accounts.update(
       { email: params.email },
-      { $set: { password: libs.hashPassword(params.password) } },
+      { $set: { password: params.password } },
       function (err) {
-        console.log(err);
         if (err) return callback(err);
 
         db.activations.remove({ email: params.email }, function (error) {

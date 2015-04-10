@@ -29,10 +29,10 @@ router.post("/", function (req, res) {
           // Set "isActive" true in accounts
           // Remove password reset token in activations
           libs.activateUser(user.email, function (error) {
-            return res.status(500).json({
-              error: error,
-              message: "DB operation failed"
-            });
+            if (error) {
+              // Dear future self, if you are laughing at this, you better help fix it.
+              console.log("Error activating user", error);
+            }
           });
         }
 
