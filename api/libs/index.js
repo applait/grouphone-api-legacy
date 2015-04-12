@@ -123,21 +123,28 @@ var libs = {
    * second arg contains the result object.
    */
   sendEmail: function (params, callback) {
-    var mandrill = (new require("mandrill-api/mandrill")).Mandrill(config.MANDRILL_API_KEY);
-
+    var mandrill = new (require("mandrill-api/mandrill")).Mandrill(config.MANDRILL_API_KEY);
+    console.log(params.html);
     var message = {
-      "html": params.body, // @TODO: Parse this through an ejs template made for email
+      "html": params.html,
+      "text": null,
+      "auto_text": true,
       "subject": params.subject,
       "from_email": config.SITE_EMAIL ? config.SITE_EMAIL : "noreply@grouphone.me",
       "from_name": config.SITE_NAME ? config.SITE_NAME : "Grouphone",
-      "to": params.to
+      "to": [{
+        email: params.email,
+        name: params.name ? params.name : params.email,
+        type: "to"
+      }]
     };
 
     mandrill.messages.send({ message: message, async: true }, function (result) {
-      callback(null, result);
+      console.log("email sending result", result);
+      if (callback) callback(null, result);
     }, function (e) {
       console.log("Error sending email: " + e.name + ": " + e.message);
-      callback("Error sending email: " + e.name + ": " + e.message);
+      if (callback) callback("Error sending email: " + e.name + ": " + e.message);
     });
   },
 

@@ -29,6 +29,11 @@ router.post("/", function (req, res) {
             message: "DB operation failed"
           });
         }
+
+        res.render("email/forgot", { email: user.email, token: token }, function (err, html) {
+          if (err) return console.log(err);
+          libs.sendEmail({ html: html, subject: "Reset your Grouphone password", email: user.email });
+        });
         return res.status(200).json({ email: user.email, token: token });
       });
     }
