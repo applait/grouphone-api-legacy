@@ -16,5 +16,6 @@ router.use("/passwd", require("./passwd"));
 router.use("/activate", require("./activate"));
 router.use("/sendinvite", require("./sendinvite"));
 router.use("/requestinvite", require("./requestinvite"));
+router.use("/user", require("./user"));
 
 module.exports = router;
