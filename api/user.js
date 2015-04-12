@@ -32,6 +32,9 @@ router.post("/create", function (req, res) {
   });
 });
 
+/**
+ * Fetch user account information using email
+ */
 router.get("/:email", function (req, res) {
   libs.findUser(req.params.email, function (err, user) {
     if (err) return res.status(500).json({ message: "Unable to fetch user details." });
