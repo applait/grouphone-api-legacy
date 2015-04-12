@@ -39,7 +39,7 @@ router.post("/", function (req, res) {
     }
 
     // If the user doesn't exist, send fail message
-    else res.status(200).json({
+    else res.status(401).json({
       error: {},
       message: "Couldn't find the user."
     });
