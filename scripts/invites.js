@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 var db = require("../db"),
-    count = 0;
+    count = 0,
+    emails = [];
 
 db.invites.createReadStream().on("data", function (data) {
-    count++;
-    console.log("-", data.key);
+  count++;
+  emails.push(data.key);
 }).on("end", function () {
-    console.log("Total invites:" + count);
+  console.log(JSON.stringify({ "emails": emails, "count": count }, null, 2));
 });
-
