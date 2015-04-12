@@ -10,8 +10,8 @@ var router = require("express").Router();
 router.post("/create", function (req, res) {
   var email = req.body && req.body.email && req.body.email.trim();
   var name = req.body && req.body.name && req.body.name.trim();
-  var sendEmail = req.sendEmail || false;
-  var isInvite = req.isInvite || false;
+  var sendEmail = (req.body && req.body.sendEmail) || false;
+  var isInvite = (req.body && req.body.isInvite) || false;
 
   if (!email) {
     return res.status(401).json({ message: "Need email to be passed as a body parameter." });
