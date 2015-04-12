@@ -12,6 +12,37 @@ var libs = {
     });
   },
 
+  addUser: function (params, callback) {
+    if (!params.email) {
+      return callback("Need email in params.");
+    }
+    libs.findUser(params.email, function (err, doc) {
+      if (err) {
+        return callback({ message: "Error checking for existing user.", status: 500 });
+      }
+      if (doc) {
+        return callback({ message: "Email id is already associated with an existing user.", status: 401 });
+      }
+      var user = {
+        email: params.email,
+        name: params.name || null,
+        password: "0000000000000000",
+        isActive: false
+      };
+      db.accounts.insert(user, function(err) {
+        if (err) {
+          return callback({ message: "Error insert user in DB", status: 500 });
+        }
+        libs.deactivateUser(params.email, function (err, token) {
+          if (err) {
+            return callback({ messsage: "Error setting activation token for new user", status: 500 });
+          }
+          callback(null, { email: params.email, token: token, name: user.name });
+        });
+      });
+    })
+  },
+
   activateUser: function (email, callback) {
     db.activations.remove({ email: email }, function (error) {
       if (error) return callback(error);
