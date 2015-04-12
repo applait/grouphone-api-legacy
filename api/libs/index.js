@@ -146,18 +146,19 @@ var libs = {
    * Method to send email
    *
    * @param {Object} params - An object containing the email parameters
-   * @param {String} params.body - The body content to be sent in the email. This will be rendered into a template.
+   * @param {String} params.html - The body content to be sent in the email. This should be the html. It will be
+   * converted to inline styles.
    * @param {String} params.subject - The subject of the email.
-   * @param {Array} params.to - An array of objects per receiver. Each object needs to contain: { email: "", name: ""}.
-   * `name` is optional.
+   * @param {String} params.email - The email of the recipient.
+   * @param {String=} params.name - The name of the recipient (Optional).
    * @param {Function} callback - The callback gets two args. The first arg is set only when there is an error. The
    * second arg contains the result object.
    */
   sendEmail: function (params, callback) {
+    var juice = require("juice");
     var mandrill = new (require("mandrill-api/mandrill")).Mandrill(config.MANDRILL_API_KEY);
-    console.log(params.html);
     var message = {
-      "html": params.html,
+      "html": juice(params.html), // Converts html and css to inline styles for email compatibility
       "text": null,
       "auto_text": true,
       "subject": params.subject,

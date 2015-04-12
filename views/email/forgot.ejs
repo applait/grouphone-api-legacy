@@ -1,26 +1,15 @@
-<!doctype html>
-<html>
-  <head><title>Your Grouphone password</title></head>
-  <style type="text/css">
-    body {
-      text-align: center;
-    }
-  </style>
-<body>
-  <h2>Reset your password</h2>
+<%- include("includes/email-head") %>
 
-  <p>Hi <%= email %>,</p>
+<h2>Reset your password</h2>
 
-  <p>You (and hopefully not anyone else) have initiated a password reset request on Grouphone.</p>
+<p>Hi <%= email %>,</p>
 
-  <p>Please go to this URL to set a new password for your Grouphone account:</p>
+<p>You (and hopefully not anyone else) have initiated a password reset request on Grouphone.</p>
 
-  <p><strong><a href="http://grouphone.me/activate/<%= token %>" target="_blank">http://grouphone.me/activate/<%= token %></a></strong></p>
+<p>Please go to this URL to set a new password for your Grouphone account:</p>
 
-  <p>If you remember your existing password, you can still login with it.</p>
+<p class="highlight"><strong><a href="http://grouphone.me/activate/<%= token %>" target="_blank">http://grouphone.me/activate/<%= token %></a></strong></p>
 
-  <p>Cheers!</p>
+<p>If you remember your existing password, you can still login with it.</p>
 
-  <p>The Grouphone team</p>
-</body>
-</html>
+<%- include("includes/email-foot") %>
