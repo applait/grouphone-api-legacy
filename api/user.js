@@ -44,3 +44,5 @@ router.get("/:email", function (req, res) {
     res.status(200).json(user);
   });
 });
+
+module.exports = router;
