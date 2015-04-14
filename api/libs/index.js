@@ -168,7 +168,8 @@ var libs = {
         email: params.email,
         name: params.name ? params.name : params.email,
         type: "to"
-      }]
+      }],
+      "signing_domain": "grouphone.me"
     };
 
     mandrill.messages.send({ message: message, async: true }, function (result) {
