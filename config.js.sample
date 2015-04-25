@@ -7,7 +7,12 @@ var config = {
     SALT: "w#e^w7&e*3@w74r32!",
     MANDRILL_API_KEY: "",
     SITE_NAME: "Grouphone",
-    SITE_EMAIL: "noreply@grouphone.me"
+    SITE_EMAIL: "noreply@grouphone.me",
+
+    // SSL Certificate settings
+    SSL_KEY: "./infosec/key.pem",
+    SSL_CERT: "./infosec/cert.pem",
+    SSL_PASSPHRASE: ""
 };
 
 module.exports = config;
