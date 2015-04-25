@@ -4,7 +4,8 @@
   "description": "API layer for Grouphone",
   "main": "server.js",
   "scripts": {
-    "test": "npm test"
+    "test": "npm test",
+    "cert": "./scripts/generatecert.sh"
   },
   "repository": {
     "type": "git",

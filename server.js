@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 var express = require("express"),
+    fs = require("fs"),
+    https = require("https"),
     bodyParser = require("body-parser"),
     config = require("./config"),
     db = require("./db");
@@ -26,11 +28,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Register routes
 app.use("/api", require("./api"));
 app.get("/", function (req, res) {
-  res.redirect("http://grouphone.me");
+  res.redirect("https://grouphone.me");
 });
 
+// Set https options
+var https_options = {
+  key: fs.readFileSync(config.SSL_KEY),
+  cert: fs.readFileSync(config.SSL_CERT),
+  passphrase: config.SSL_PASSPHRASE
+};
+
 // Start the server
-var server = app.listen(config.APP_PORT, config.APP_IP, function () {
-    console.log("Starting Grouphone API server...");
+https.createServer(https_options, app).listen(config.APP_PORT, config.APP_IP, function () {
+    console.log("Starting secure Grouphone API server...");
     console.log("Listening on port %s:%d", config.APP_IP, config.APP_PORT);
 });
