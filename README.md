@@ -8,6 +8,7 @@ API layer for Grouphone
 - Copy `config.js.sample` to `config.js` in the same directory.
 - Change values in `config.js` if necessary.
 - `npm install`
+- `npm run cert`
 - `node server.js`
 
 ## Run on different port
