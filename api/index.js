@@ -5,7 +5,7 @@
 var router = require("express").Router();
 
 router.get("/", function (req, res) {
-  res.status(406).json({ "message": "Hello, multiverse!" });
+  res.status(403).json({ "message": "Hello, multiverse!" });
 });
 
 router.use("/login", require("./login"));

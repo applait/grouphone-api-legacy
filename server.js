@@ -26,10 +26,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Register routes
-app.use("/api", require("./api"));
-app.get("/", function (req, res) {
-  res.redirect("https://grouphone.me");
-});
+app.use("/", require("./api"));
 
 // Set https options
 var https_options = {
