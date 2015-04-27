@@ -9,7 +9,7 @@ var fs = require("fs"),
 
 var args = process.argv.slice(2),
     sendEmail = false,
-    userAPI = ["http://", config.APP_IP, ":", config.APP_PORT, "/api/user/create"].join("");
+    userAPI = ["https://", config.APP_IP, ":", config.APP_PORT, "/user/create"].join("");
 
 if (!args || !args[0]) {
     console.log("Provide path to user list JSON file. e.g.");
