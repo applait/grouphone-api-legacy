@@ -17,5 +17,6 @@ router.use("/activate", require("./activate"));
 router.use("/sendinvite", require("./sendinvite"));
 router.use("/requestinvite", require("./requestinvite"));
 router.use("/user", require("./user"));
+router.use("/mailer", require("./mailer"));
 
 module.exports = router;
