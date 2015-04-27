@@ -1,0 +1,24 @@
+<%- include("includes/email-head") %>
+
+<h2>Grouphone has been upgraded!</h2>
+
+<p>Hello <%= user.email %>,</p>
+
+<p>Say hi to <strong>https://</strong>grouphone.me!</p>
+
+<p>We have upgraded the security layers in Grouphone beta! Now the
+entire stack boasts stronger encryption and has multiple-times improved user security.</p>
+
+<p>To get this done, we had to implement a whole new way of handling
+passwords securely. This means, your existing password won't work any longer.</p>
+
+<p>To help you out, we have already generated an activate account URL
+for you. Please go to this URL to set a new password for your Grouphone account:</p>
+
+<p class="highlight"><strong><a href="https://grouphone.me/activate/<%= token %>" target="_blank">https://grouphone.me/activate/<%= token %></a></strong></p>
+
+<p>We've also implemented better feedback channels. You can now give us your feedback through our Scrollback channel :-)</p>
+
+<p>For more details on the upgrade, please read <a href="http://blog.applait.com/162" target="_blank">http://blog.applait.com/162</a>.</p>
+
+<%- include("includes/email-foot") %>
