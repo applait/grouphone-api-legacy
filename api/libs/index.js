@@ -12,6 +12,18 @@ var libs = {
     });
   },
 
+  findUsers: function (filters, callback) {
+    if (filters instanceof Function) {
+      callback = filters;
+      filters = {};
+    }
+    filters = filters || {};
+    db.accounts.find(filters, { _id: 0, password: 0 }).toArray(function (err, docs) {
+      if (err) return callback(err);
+      callback(null, docs);
+    });
+  },
+
   addUser: function (params, callback) {
     if (!params.email) {
       return callback("Need email in params.");
