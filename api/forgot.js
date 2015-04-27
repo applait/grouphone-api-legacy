@@ -8,6 +8,8 @@ var router = require("express").Router();
 // Expects username in request body
 router.post("/", function (req, res) {
 
+  var sendemail = req.body.sendEmail || true;
+
   // API looks up on database for the user
   libs.findUser(req.body.email, function (err, user) {
 
@@ -30,10 +32,12 @@ router.post("/", function (req, res) {
           });
         }
 
-        res.render("email/forgot", { email: user.email, token: token }, function (err, html) {
-          if (err) return console.log(err);
-          libs.sendEmail({ html: html, subject: "Reset your Grouphone password", email: user.email });
-        });
+        if (sendemail) {
+          res.render("email/forgot", { email: user.email, token: token }, function (err, html) {
+            if (err) return console.log(err);
+            libs.sendEmail({ html: html, subject: "Reset your Grouphone password", email: user.email });
+          });
+        }
         return res.status(200).json({ email: user.email, token: token });
       });
     }
