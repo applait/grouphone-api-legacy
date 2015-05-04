@@ -12,9 +12,6 @@ router.post("/:email", function (req, res) {
     return res.status(403).json({ "message": "Invitations are closed now.", "status": 403 });
   }
 
-  if (req.hostname !== config.HOSTNAME) {
-    return res.status(403).json({ "message": "Not you. Yes, YOU. NOT you.", "status": 403 });
-  }
   // Look for the `name` query parameter
   var email = req.params && req.params.email && req.params.email.trim();
 
