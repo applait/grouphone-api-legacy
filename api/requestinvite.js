@@ -8,53 +8,58 @@ var router = require("express").Router();
 
 router.post("/:email", function (req, res) {
 
-    if (!config.ACCEPT_INVITATION) {
-        return res.status(403).json({ "message": "Invitations are closed now." });
+  if (!config.ACCEPT_INVITATION) {
+    return res.status(403).json({ "message": "Invitations are closed now.", "status": 403 });
+  }
+
+  if (req.hostname !== config.HOSTNAME) {
+    return res.status(403).json({ "message": "Not you. Yes, YOU. NOT you.", "status": 403 });
+  }
+  // Look for the `name` query parameter
+  var email = req.params && req.params.email && req.params.email.trim();
+
+  if (!email) {
+    return res.status(401).json({ "message": "Need `email` as a query parameter.", "status": 401 });
+  }
+
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) !== true) {
+    return res.status(401).json({ "message": "Need a valid email address.", "status": 401 });
+  }
+
+  // Check if email already exists
+  libs.findUser(email, function (err, doc) {
+    if (err) {
+      // Return error if db lookup fails
+      return res.status(500).json({
+        error: err,
+        message: "DB operation failed"
+      });
     }
-
-    if (req.hostname !== config.HOSTNAME) {
-        return res.status(403).json({ "message": "Not you. Yes, YOU. NOT you." });
-    }
-    // Look for the `name` query parameter
-    var email = req.params && req.params.email && req.params.email.trim();
-
-    if (!email) {
-        return res.status(406).json({ "message": "Need `email` as a query parameter.", "status": 406 });
-    }
-
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) !== true) {
-        return res.status(406).json({ "message": "Need a valid email address.", "status": 406 });
-    }
-
-    // Check if email already exists
-    db.invites.get(email, function (err) {
-        if (err) {
-            if (err.notFound) {
-                // Prepare data object
-                var data = {
-                    "timestamp": Date.now(),
-                    "ip": req.ip
-                };
-
-                // Put id in session db
-                db.invites.put(email, data, function (err) {
-                    if (err) {
-                        console.log("[ERR] Inserting request invite email", email, req.ip);
-                        return res.status(500).json({ "message": "Oops! Something went wrong", "status": 500 });
-                    }
-                    res.status(200).json({ "message": "Got it. You are in queue!", "status": 200});
-                });
-            } else {
-                console.log("[ERR] Checking request invite email", email, req.ip);
-                return res.status(500).json({ "message": "Oops! Something went wrong", "status": 500 });
-            }
-        } else {
-            return res.status(200).json({
-                "message": "This email is already registered. But, we're overjoyed to see your interest!",
-                "status": 200
-            });
+    // If email already exists, let them know
+    if (doc !== null) {
+      return res.status(200).json({
+        "message": "You already have an account with us! Try logging in!",
+        "status": 200
+      });
+    } else {
+      db.invites.findOne({ email: email }, function (err, doc) {
+        if (doc !== null) {
+          return res.status(200).json({
+            "message": "You are already in the invite queue! Wait for the invitation!",
+            "status": 200
+          });
         }
-    });
+
+        // Email does not exist yet. So add invite
+        db.invites.insert({ email: email, timestamp: new Date() }, function (err) {
+          return res.status(200).json({
+            "message": "You have been added to the invitation queue! Wait for the invitation!",
+            "status": 200
+          });
+        });
+      });
+    }
+  });
 });
 
 module.exports = router;
