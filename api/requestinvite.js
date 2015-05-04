@@ -6,14 +6,14 @@
 
 var router = require("express").Router();
 
-router.post("/:email", function (req, res) {
+router.post("/", function (req, res) {
 
   if (!config.ACCEPT_INVITATION) {
     return res.status(403).json({ "message": "Invitations are closed now.", "status": 403 });
   }
 
-  // Look for the `name` query parameter
-  var email = req.params && req.params.email && req.params.email.trim();
+  // Look for the `email` in the body
+  var email = req.body && req.body.email && req.body.email.trim();
 
   if (!email) {
     return res.status(401).json({ "message": "Need `email` as a query parameter.", "status": 401 });
