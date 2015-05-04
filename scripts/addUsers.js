@@ -2,53 +2,70 @@
  * Add users in a user list file to the DB
  */
 
-var fs = require("fs"),
-    path = require("path"),
-    request = require("request"),
-    config = require("../config");
+var request = require("request"),
+    config = require("../config"),
+    db = require("../db");
 
 var args = process.argv.slice(2),
     sendEmail = false,
-    userAPI = ["https://", config.APP_IP, ":", config.APP_PORT, "/user/create"].join("");
+    userAPI = ["https://", config.APP_IP, ":", config.APP_PORT, "/user/create"].join(""),
+    count = 0,
+    length = 0;
 
-if (!args || !args[0]) {
-    console.log("Provide path to user list JSON file. e.g.");
-    console.log("\n  $ node scripts/addUsers.js storage/beta-invites.json");
-    process.exit(1);
-}
-
-try {
-  var userlist = JSON.parse(fs.readFileSync(path.resolve(args[0])));
-} catch (e) {
-  console.log("Invalid JSON file provided.");
-  process.exit(1);
-}
-
-if (!userlist.emails || !userlist.count) {
-  console.log("User list file needs to be in the format:\n");
-  console.log("  { 'emails': [], 'count': 0 }");
-  process.exit(1);
-}
-
-if (args[1] && parseInt(args[1]) === 1) {
+if (args[0] && parseInt(args[0]) === 1) {
   sendEmail = true;
+  console.log("Sending emails for new accounts\n");
+} else {
+  sendEmail = false;
+  console.log("Not sending emails for new accounts.\n***Pass `1` as argument to this script to send emails***\n");
 }
 
-// Start processing
-userlist.emails.forEach(function (email) {
+// Disable TLS authorization check so that we can use self-signed cert for the Grouphone API
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-  request.post(
-    { url: userAPI,
-      form: { email: email, sendEmail: sendEmail, isInvite: true }},
-    function (err, response, body) {
-      if (!err && response.statusCode == 200) {
-        body = JSON.parse(body);
-        console.log("+ " + email + " created. Token: " + body.token);
-      } else if (response.statusCode == 401) {
-        console.log("x " + email + " already created.");
-      } else {
-        console.log("x " + email + " could not be created.");
-      }
-    });
+db.invites.find({}, { _id: 0 }).toArray(function (err, userlist) {
 
+  length = userlist.length;
+
+  if (userlist.length === 0) {
+    console.log("No invites left to send.");
+    return end();
+  }
+
+  // Start processing
+  userlist.forEach(function (user) {
+    request.post(
+      { url: userAPI,
+        form: { email: user.email, sendEmail: sendEmail, isInvite: true }},
+      function (err, response, body) {
+        if (!err && response.statusCode == 200) {
+          body = JSON.parse(body);
+          console.log("+ " + user.email + " created. Token: " + body.token);
+          db.invites.remove({ "email": user.email }, function (err) {
+            count++;
+            if (err) console.log(err);
+          });
+        } else if (response.statusCode == 401) {
+          console.log("x " + user.email + " already created.");
+          db.invites.remove({ "email": user.email }, function (err) {
+            count++;
+            if (err) console.log(err);
+          });
+        } else {
+          count++;
+          console.log("x " + user.email + " could not be created.");
+        }
+      });
+
+  });
+  end();
 });
+
+var end = function () {
+  if (count === length) {
+    console.log("Done");
+    db.mongo.close();
+  } else {
+    setTimeout(function () { end(); }, 1000);
+  }
+};
