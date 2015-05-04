@@ -9,5 +9,6 @@ module.exports = {
   activations: mongo.collection("activations"),
   accounts: mongo.collection("accounts"),
   sessions: mongo.collection("sessions"),
+  invites: mongo.collection("invites"),
   mongo: mongo
 };
