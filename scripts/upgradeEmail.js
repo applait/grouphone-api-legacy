@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+// Stop this script from getting executed accidentally
+console.log("This script is locked down currently.");
+process.exit(1);
+
 var request = require("request");
 var config = require("../config");
 
