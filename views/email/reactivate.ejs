@@ -1,0 +1,19 @@
+<%- include("includes/email-head") %>
+
+<h2>Your Grouphone account needs to be activated</h2>
+
+<p>Hello <%= user.email %>,</p>
+
+<p>We have been waiting for you to activate your Grouphone.me account.</p>
+
+<p>Please go to this URL to set a password and start making calls on Grouphone:</p>
+
+<p class="highlight"><strong><a href="https://grouphone.me/activate/<%= user.token %>" target="_blank">https://grouphone.me/activate/<%= user.token %></a></strong></p>
+
+<h3>About Grouphone</h3>
+
+<p><a href="https://grouphone.me">Grouphone</a> lets you make group audio calls between any WebRTC-compliant browsers. It uses a minimalistic approach to deliver distraction-free audio conferencing with minimum resource usage.</p>
+
+<p>If you have any queries, tweet to us at <a href="https://twitter.com/applait">@applait</a> or <a href="https://zone.applait.com/c/grouphone">join the community</a>.</p>
+
+<%- include("includes/email-foot") %>
