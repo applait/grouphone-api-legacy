@@ -14,12 +14,12 @@ router.post("/create", function (req, res) {
   var isInvite = (req.body && req.body.isInvite) || false;
 
   if (!email) {
-    return res.status(401).json({ message: "Need email to be passed as a body parameter." });
+    return res.status(401).json({ message: "Need email to be passed as a body parameter.", status: 401 });
   }
 
   libs.addUser({ email: email, name: name }, function (err, user) {
     if (err) {
-      return res.status(err.status).json({ message: err.message });
+      return res.status(err.status).json({ message: err.message, status: err.status });
     }
     if (sendEmail) {
       var tmpl = isInvite ? "email/signupinvite" : "email/signupnormal";
@@ -28,7 +28,7 @@ router.post("/create", function (req, res) {
         libs.sendEmail({ html: html, subject: "Welcome to Grouphone!", email: user.email });
       });
     }
-    res.status(200).json(user);
+    res.status(200).json({ message: "User created. Please check your email.", user: user, status: 200 });
   });
 });
 
