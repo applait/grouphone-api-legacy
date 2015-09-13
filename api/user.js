@@ -11,7 +11,6 @@ router.post("/create", function (req, res) {
   var email = req.body && req.body.email && req.body.email.trim();
   var name = req.body && req.body.name && req.body.name.trim();
   var sendEmail = (req.body && req.body.sendEmail) || false;
-  var isInvite = (req.body && req.body.isInvite) || false;
 
   if (!email) {
     return res.status(401).json({ message: "Need email to be passed as a body parameter.", status: 401 });
@@ -22,8 +21,7 @@ router.post("/create", function (req, res) {
       return res.status(err.status).json({ message: err.message, status: err.status });
     }
     if (sendEmail) {
-      var tmpl = isInvite ? "email/signupinvite" : "email/signupnormal";
-      res.render(tmpl, user, function (err, html) {
+      res.render("email/signupnormal", user, function (err, html) {
         if (err) return console.log(err);
         libs.sendEmail({ html: html, subject: "Welcome to Grouphone!", email: user.email });
       });
